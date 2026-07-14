@@ -1,0 +1,66 @@
+@if (event(); as e) {
+  <article class="detail">
+    <div class="detail__hero">
+      <img [src]="e.imageUrl" [alt]="e.title" />
+      <button class="detail__back" (click)="back()" aria-label="Zurück">←</button>
+      <button class="detail__share" (click)="share()" aria-label="Event teilen">Teilen</button>
+    </div>
+
+    <div class="detail__body">
+      <span class="pill">{{ categoryLabel() }}</span>
+      <h1 class="detail__title">{{ e.title }}</h1>
+
+      <dl class="detail__facts">
+        <div>
+          <dt>Wann</dt>
+          <dd>
+            {{ e.start | date: 'EEEE, dd.MM.yyyy · HH:mm' }}
+            @if (e.end) {
+              – {{ e.end | date: 'HH:mm' }}
+            }
+          </dd>
+        </div>
+        <div>
+          <dt>Wo</dt>
+          <dd>{{ e.locationName }}, {{ e.address }}</dd>
+        </div>
+        <div>
+          <dt>Preis</dt>
+          <dd>
+            @if (e.price !== undefined) {
+              {{ e.price === 0 ? 'Eintritt frei' : e.price + '€' }}
+            } @else {
+              k.A.
+            }
+            @if (e.priceNote) {
+              · {{ e.priceNote }}
+            }
+          </dd>
+        </div>
+        @if (e.minAge) {
+          <div>
+            <dt>Alter</dt>
+            <dd>ab {{ e.minAge }} Jahren</dd>
+          </div>
+        }
+      </dl>
+
+      <p class="detail__description">{{ e.description }}</p>
+
+      <div class="detail__tags">
+        @for (tag of e.tags; track tag) {
+          <span class="pill">{{ tag }}</span>
+        }
+      </div>
+
+      <p class="detail__organizer">
+        Veranstalter: {{ e.organizerName }}
+        @if (e.organizerLink) {
+          · <a [href]="e.organizerLink" target="_blank" rel="noopener">Website</a>
+        }
+      </p>
+    </div>
+  </article>
+} @else {
+  <p class="detail__missing">Event nicht gefunden.</p>
+}

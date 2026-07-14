@@ -1,0 +1,50 @@
+<section class="feed">
+  @if (isEmpty()) {
+    <div class="feed__empty">
+      <h2>Alles durchgeswiped</h2>
+      <p>Neue Events kommen laufend dazu. Schau später wieder rein oder öffne deine Merkliste.</p>
+    </div>
+  } @else {
+    <div class="feed__stack">
+      @for (event of stack(); track event.id; let isTop = $first) {
+        <div
+          class="feed__card"
+          [class.feed__card--top]="isTop"
+          [class.feed__card--dragging]="isTop && isDragging()"
+          [style.transform]="
+            isTop
+              ? 'translate(' + dragX() + 'px, ' + dragY() + 'px) rotate(' + rotation() + 'deg)'
+              : 'scale(0.95) translateY(12px)'
+          "
+          (pointerdown)="isTop && onPointerDown($event)"
+          (pointermove)="isTop && onPointerMove($event)"
+          (pointerup)="isTop && onPointerUp()"
+          (pointercancel)="isTop && onPointerUp()"
+        >
+          <app-event-card [event]="event" />
+          @if (isTop) {
+            <span class="feed__badge feed__badge--like" [style.opacity]="likeOpacity()">GO</span>
+            <span class="feed__badge feed__badge--nope" [style.opacity]="nopeOpacity()">NOPE</span>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="feed__actions">
+      <button
+        class="feed__action feed__action--nope"
+        (click)="swipeByButton('dislike')"
+        aria-label="Kein Interesse"
+      >
+        ✕
+      </button>
+      <button
+        class="feed__action feed__action--like"
+        (click)="swipeByButton('like')"
+        aria-label="Gefällt mir, merken"
+      >
+        ♥
+      </button>
+    </div>
+  }
+</section>

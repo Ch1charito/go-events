@@ -1,0 +1,11 @@
+<main class="app__content">
+  <router-outlet />
+</main>
+
+<nav class="app__nav">
+  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+    Feed
+  </a>
+  <a routerLink="/saved" routerLinkActive="active">Merkliste</a>
+  <!-- TODO (Firebase Auth): Profil-Link -->
+</nav>

@@ -1,0 +1,32 @@
+<section class="saved">
+  <h1 class="saved__heading">Merkliste</h1>
+
+  @if (saved().length === 0) {
+    <p class="saved__empty">
+      Noch nichts gemerkt. Swipe im Feed nach rechts, um Events hier zu sammeln.
+    </p>
+  } @else {
+    <ul class="saved__list">
+      @for (event of saved(); track event.id) {
+        <li>
+          <a class="saved__item" [routerLink]="['/event', event.id]">
+            <img class="saved__thumb" [src]="event.imageUrl" [alt]="event.title" />
+            <div class="saved__info">
+              <span class="saved__title">{{ event.title }}</span>
+              <span class="saved__meta">
+                {{ event.start | date: 'EE dd.MM. · HH:mm' }} · {{ event.locationName }}
+              </span>
+            </div>
+            <button
+              class="saved__remove"
+              (click)="remove(event.id, $event)"
+              aria-label="Von Merkliste entfernen"
+            >
+              ✕
+            </button>
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</section>

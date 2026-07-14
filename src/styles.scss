@@ -1,0 +1,51 @@
+@use 'variables' as v;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: v.$bg-base;
+  color: v.$text-primary;
+  font-family: v.$font;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+a {
+  color: v.$accent;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+// Utility: Tag-Pill
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: v.$radius-pill;
+  background: v.$accent-bg;
+  color: v.$accent-text;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}

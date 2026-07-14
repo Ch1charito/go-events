@@ -1,30 +1,45 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  Firestore,
+  addDoc,
+  collection,
+  collectionData,
+  query,
+  where,
+  orderBy,
+} from '@angular/fire/firestore';
 import { GoEvent } from '../models/event.model';
 import { Swipe, SwipeDirection } from '../models/swipe.model';
-import { DUMMY_EVENTS } from './dummy-events';
 
-/**
- * Zentraler Event-State.
- *
- * Aktuell: Dummy-Daten im Speicher.
- * TODO (Firebase): Events aus Firestore laden (collection 'events',
- * where status == 'published', where start >= heute), Swipes in
- * collection 'swipes' persistieren.
- */
 @Injectable({ providedIn: 'root' })
 export class EventService {
-  private readonly events = signal<GoEvent[]>(DUMMY_EVENTS);
+  private readonly firestore = inject(Firestore);
+
+  /** Events aus Firestore: nur published, nur ab heute, nach Start sortiert */
+  private readonly events = toSignal(
+    collectionData(
+      query(
+        collection(this.firestore, 'events'),
+        where('status', '==', 'published'),
+        where('start', '>=', new Date().toISOString()),
+        orderBy('start'),
+      ),
+      { idField: 'id' },
+    ),
+    { initialValue: [] },
+  ) as import('@angular/core').Signal<GoEvent[]>;
+
+  /** Swipes: vorerst weiter lokal, wird mit Auth auf Firestore umgestellt */
   private readonly swipes = signal<Swipe[]>([]);
 
-  /** Events, die noch nicht geswiped wurden – der Feed-Stack */
   readonly feed = computed(() => {
     const swipedIds = new Set(this.swipes().map((s) => s.eventId));
     return this.events()
-      .filter((e) => e.status === 'published' && !swipedIds.has(e.id))
+      .filter((e) => !swipedIds.has(e.id))
       .sort((a, b) => this.score(b) - this.score(a) || a.start.localeCompare(b.start));
   });
 
-  /** Merkliste: gelikte Events, nach Datum sortiert */
   readonly saved = computed(() => {
     const likedIds = new Set(
       this.swipes()
@@ -36,7 +51,6 @@ export class EventService {
       .sort((a, b) => a.start.localeCompare(b.start));
   });
 
-  /** Tag-Gewichtung aus bisherigen Swipes (simples Matching) */
   private readonly tagScores = computed(() => {
     const scores: Record<string, number> = {};
     for (const s of this.swipes()) {
@@ -55,7 +69,6 @@ export class EventService {
   }
 
   swipe(eventId: string, direction: SwipeDirection): void {
-    // TODO (Firebase): addDoc in 'swipes' + tagScores am User-Dokument aktualisieren
     this.swipes.update((list) => [
       ...list,
       { userId: 'local', eventId, direction, timestamp: new Date().toISOString() },
@@ -64,6 +77,14 @@ export class EventService {
 
   removeLike(eventId: string): void {
     this.swipes.update((list) => list.filter((s) => s.eventId !== eventId));
+  }
+
+  /** Nur für die Übergangszeit: Dummy-Events nach Firestore importieren */
+  async seedDummyData(events: Omit<GoEvent, 'id'>[]): Promise<void> {
+    const ref = collection(this.firestore, 'events');
+    for (const event of events) {
+      await addDoc(ref, event);
+    }
   }
 
   private score(event: GoEvent): number {

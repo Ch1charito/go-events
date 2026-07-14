@@ -2,3 +2,4 @@
 /dist
 /.angular
 .DS_Store
+/src/environments

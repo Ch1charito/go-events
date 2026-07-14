@@ -22,6 +22,12 @@ export const routes: Routes = [
     title: 'Go – Event',
   },
   {
+    path: 'auth',
+    loadComponent: () =>
+      import('./features/auth/auth.component').then((m) => m.AuthComponent),
+    title: 'Go – Anmelden',
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./features/not-found/not-found.component').then((m) => m.NotFoundComponent),

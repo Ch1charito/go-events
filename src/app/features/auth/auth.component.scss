@@ -1,0 +1,97 @@
+@use 'variables' as v;
+
+.auth {
+    max-width: 360px;
+    margin: 0 auto;
+    padding: 48px 16px;
+    display: grid;
+    gap: 20px;
+    justify-items: stretch;
+
+    &__logo {
+        text-align: center;
+        font-size: 40px;
+        font-weight: 800;
+        color: v.$accent;
+    }
+
+    &__switch {
+        display: flex;
+        background: v.$bg-card;
+        border: 1px solid v.$border;
+        border-radius: v.$radius-pill;
+        padding: 4px;
+
+        button {
+            flex: 1;
+            padding: 10px;
+            border-radius: v.$radius-pill;
+            color: v.$text-secondary;
+            font-weight: 600;
+
+            &.active {
+                background: v.$accent-strong;
+                color: v.$text-primary;
+            }
+        }
+    }
+
+    &__form {
+        display: grid;
+        gap: 12px;
+
+        input {
+            background: v.$bg-card;
+            border: 1px solid v.$border;
+            border-radius: 12px;
+            padding: 14px;
+            color: v.$text-primary;
+            font-family: inherit;
+            font-size: 15px;
+
+            &:focus {
+                outline: none;
+                border-color: v.$accent;
+            }
+        }
+    }
+
+    &__error {
+        color: v.$dislike;
+        font-size: 13px;
+    }
+
+    &__submit {
+        background: v.$accent-strong;
+        color: v.$text-primary;
+        border-radius: 12px;
+        padding: 14px;
+        font-weight: 600;
+        font-size: 15px;
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+    }
+
+    &__divider {
+        text-align: center;
+        color: v.$text-muted;
+        font-size: 13px;
+    }
+
+    &__google {
+        background: v.$bg-elevated;
+        border: 1px solid v.$border;
+        border-radius: 12px;
+        padding: 14px;
+        font-weight: 600;
+    }
+
+    &__guest {
+        text-align: center;
+        color: v.$text-secondary;
+        font-size: 14px;
+    }
+}

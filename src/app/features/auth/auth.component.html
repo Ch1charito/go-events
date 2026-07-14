@@ -1,0 +1,33 @@
+<section class="auth">
+    <h1 class="auth__logo">Go</h1>
+
+    <div class="auth__switch">
+        <button [class.active]="mode() === 'login'" (click)="switchMode('login')">Anmelden</button>
+        <button [class.active]="mode() === 'register'" (click)="switchMode('register')">Registrieren</button>
+    </div>
+
+    <form class="auth__form" [formGroup]="form" (ngSubmit)="submit()">
+        @if (mode() === 'register') {
+        <input type="text" formControlName="displayName" placeholder="Benutzername" autocomplete="username" />
+        }
+        <input type="email" formControlName="email" placeholder="E-Mail" autocomplete="email" />
+        <input type="password" formControlName="password" placeholder="Passwort"
+            [autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'" />
+
+        @if (error(); as message) {
+        <p class="auth__error">{{ message }}</p>
+        }
+
+        <button class="auth__submit" type="submit" [disabled]="form.invalid || loading()">
+            {{ mode() === 'login' ? 'Anmelden' : 'Konto erstellen' }}
+        </button>
+    </form>
+
+    <div class="auth__divider">oder</div>
+
+    <button class="auth__google" (click)="googleLogin()" [disabled]="loading()">
+        Mit Google anmelden
+    </button>
+
+    <a class="auth__guest" routerLink="/">Als Gast weiter</a>
+</section>

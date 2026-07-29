@@ -13,30 +13,33 @@ import {
 import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { GoUser } from '../models/user.model';
 
-
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+    private readonly injector = inject(Injector);
     private readonly auth = inject(Auth);
     private readonly firestore = inject(Firestore);
-    private readonly injector = inject(Injector);
 
     /** Firebase-User als Signal: null = Gast */
-    readonly user = toSignal(user(this.auth), { initialValue: null });
+    readonly user = toSignal(this.run(() => user(this.auth)), { initialValue: null });
     readonly isLoggedIn = computed(() => this.user() !== null);
 
     async register(email: string, password: string, displayName: string): Promise<void> {
-        const credential = await createUserWithEmailAndPassword(this.auth, email, password);
-        await updateProfile(credential.user, { displayName });
+        const credential = await this.run(() =>
+            createUserWithEmailAndPassword(this.auth, email, password),
+        );
+        await this.run(() => updateProfile(credential.user, { displayName }));
         await this.createUserDocument(credential.user.uid, displayName, email);
     }
 
     async login(email: string, password: string): Promise<void> {
-        await signInWithEmailAndPassword(this.auth, email, password);
+        await this.run(() => signInWithEmailAndPassword(this.auth, email, password));
     }
 
     async loginWithGoogle(): Promise<void> {
-        const credential = await signInWithPopup(this.auth, new GoogleAuthProvider());
-        const userDoc = await runInInjectionContext(this.injector, () =>
+        const credential = await this.run(() =>
+            signInWithPopup(this.auth, new GoogleAuthProvider()),
+        );
+        const userDoc = await this.run(() =>
             getDoc(doc(this.firestore, 'users', credential.user.uid)),
         );
         if (!userDoc.exists()) {
@@ -49,7 +52,7 @@ export class AuthService {
     }
 
     async logout(): Promise<void> {
-        await signOut(this.auth);
+        await this.run(() => signOut(this.auth));
     }
 
     private async createUserDocument(uid: string, displayName: string, email: string): Promise<void> {
@@ -60,8 +63,16 @@ export class AuthService {
             createdAt: new Date().toISOString(),
             tagScores: {},
         };
-        await runInInjectionContext(this.injector, () =>
-            setDoc(doc(this.firestore, 'users', uid), newUser),
-        );
+        await this.run(() => setDoc(doc(this.firestore, 'users', uid), newUser));
+    }
+
+    /**
+     * Führt einen Firebase-Aufruf im Angular-Injection-Kontext aus.
+     * Nötig, weil der Kontext nach jedem `await` und in Event-Handlern
+     * verloren geht – @angular/fire warnt sonst und Change Detection
+     * kann in Randfällen hängen.
+     */
+    private run<T>(fn: () => T): T {
+        return runInInjectionContext(this.injector, fn);
     }
 }

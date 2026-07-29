@@ -7,5 +7,11 @@
     Feed
   </a>
   <a routerLink="/saved" routerLinkActive="active">Merkliste</a>
-  <a routerLink="/auth" routerLinkActive="active">Login</a>
+
+  @if (isLoggedIn()) {
+    <a routerLink="/profile" routerLinkActive="active">Profil</a>
+    <button class="app__logout" (click)="logout()">Logout</button>
+  } @else {
+    <a routerLink="/auth" routerLinkActive="active">Login</a>
+  }
 </nav>

@@ -15,13 +15,18 @@
   backdrop-filter: blur(8px);
   border-top: 1px solid v.$border;
 
-  a {
+  a,
+  button {
     color: v.$text-muted;
     font-size: 14px;
     font-weight: 600;
     padding: 10px 20px;
     border-radius: v.$radius-pill;
     transition: color 0.15s ease;
+
+    &:hover {
+      color: v.$text-secondary;
+    }
 
     &.active {
       color: v.$accent;

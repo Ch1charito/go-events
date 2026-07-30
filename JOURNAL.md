@@ -13,3 +13,13 @@
 - @angular/fire@19 integriert, environment-Config (nicht im Repo)
 - EventService auf Firestore umgestellt (collectionData + toSignal), Composite Index angelegt
 - Dummy-Events nach Firestore geseedet, feature/firebase in main gemerged
+
+## Session 3
+- feature/auth abgeschlossen und nach main gemerged
+- AuthService gebaut: Registrierung, Login, Google-Login, Logout
+  (E-Mail + Google), User-Signal via toSignal, User-Dokument in Firestore
+- Login/Registrieren-Seite mit Reactive Forms, Umschalter, Fehler-Mapping,
+  Gast-Modus
+- Injection-Context-Problem gelöst: run()-Helper wrappt jeden Firebase-Aufruf
+  in runInInjectionContext (nötig, weil await den Kontext zerstört)
+- Navbar reagiert auf Login-Zustand (Login <-> Profil + Logout), Hover-States

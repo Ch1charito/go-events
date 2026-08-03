@@ -6,7 +6,34 @@
 
     <div class="admin__grid">
         <aside class="admin__list">
-            <p class="admin__hint">Liste kommt gleich…</p>
+            <div class="admin__list-head">
+                <h2>Events ({{ sortedEvents().length }})</h2>
+                <select class="admin__sort" [value]="sortBy()" (change)="sortBy.set($any($event.target).value)">
+                    <option value="start">Datum</option>
+                    <option value="title">Titel</option>
+                    <option value="category">Kategorie</option>
+                </select>
+            </div>
+
+            @if (sortedEvents().length === 0) {
+            <p class="admin__hint">Noch keine Events angelegt.</p>
+            } @else {
+            <ul class="admin__items">
+                @for (event of sortedEvents(); track event.id) {
+                <li class="admin__item" [class.admin__item--active]="editingId() === event.id" (click)="edit(event)">
+                    <div class="admin__item-main">
+                        <span class="admin__item-title">{{ event.title }}</span>
+                        <span class="admin__item-meta">
+                            {{ event.start | date: 'dd.MM. HH:mm' }} · {{ categoryLabels[event.category] }}
+                            @if (event.status === 'draft') { · Entwurf }
+                        </span>
+                    </div>
+                    <button class="admin__item-delete" (click)="delete(event); $event.stopPropagation()"
+                        aria-label="Event löschen" title="Löschen">🗑</button>
+                </li>
+                }
+            </ul>
+            }
         </aside>
 
         <form class="admin__form" [formGroup]="form" (ngSubmit)="save()">

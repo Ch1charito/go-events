@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminService } from '../../core/services/admin.service';
+import { EventService } from '../../core/services/event.service';
+import { DatePipe } from '@angular/common';
 import {
   CATEGORIES,
   CATEGORY_LABELS,
@@ -11,7 +13,7 @@ import {
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss',
@@ -19,6 +21,7 @@ import {
 export class AdminComponent {
   private readonly fb = inject(FormBuilder);
   private readonly adminService = inject(AdminService);
+  private readonly eventService = inject(EventService);
 
   readonly categories = CATEGORIES;
   readonly categoryLabels = CATEGORY_LABELS;
@@ -31,6 +34,18 @@ export class AdminComponent {
   readonly heading = computed(() =>
     this.editingId() ? 'Event bearbeiten' : 'Neues Event',
   );
+
+  readonly sortBy = signal<'start' | 'title' | 'category'>('start');
+
+  readonly sortedEvents = computed(() => {
+    const events = [...this.eventService.allEvents()];
+    const key = this.sortBy();
+    return events.sort((a, b) => {
+      if (key === 'start') return b.start.localeCompare(a.start); // neueste zuerst
+      if (key === 'title') return a.title.localeCompare(b.title);
+      return a.category.localeCompare(b.category);
+    });
+  });
 
   readonly form = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.minLength(3)]],
@@ -120,5 +135,47 @@ export class AdminComponent {
     } finally {
       this.saving.set(false);
     }
+  }
+
+  edit(event: GoEvent): void {
+    this.editingId.set(event.id);
+    this.message.set(null);
+    this.form.reset({
+      title: event.title,
+      description: event.description,
+      imageUrl: event.imageUrl,
+      category: event.category,
+      tags: event.tags.join(', '),
+      start: this.toLocalInput(event.start),
+      end: event.end ? this.toLocalInput(event.end) : '',
+      locationName: event.locationName,
+      address: event.address,
+      district: event.district,
+      price: event.price ?? null,
+      priceNote: event.priceNote ?? '',
+      minAge: event.minAge ?? null,
+      organizerName: event.organizerName,
+      organizerLink: event.organizerLink ?? '',
+      status: event.status,
+    });
+  }
+
+  async delete(event: GoEvent): Promise<void> {
+    if (!confirm(`Event "${event.title}" wirklich löschen?`)) return;
+    try {
+      await this.adminService.deleteEvent(event.id);
+      if (this.editingId() === event.id) this.resetForm();
+      this.message.set('Event gelöscht.');
+    } catch (err) {
+      console.error(err);
+      this.message.set('Fehler beim Löschen.');
+    }
+  }
+
+  /** ISO 'YYYY-MM-DDTHH:mm:ss.sssZ' → 'YYYY-MM-DDTHH:mm' für datetime-local */
+  private toLocalInput(iso: string): string {
+    const d = new Date(iso);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
   }
 }

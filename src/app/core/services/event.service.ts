@@ -39,6 +39,17 @@ export class EventService {
     { initialValue: [] },
   ) as import('@angular/core').Signal<GoEvent[]>;
 
+  /** Alle Events für Admin-Zwecke (auch drafts, auch vergangene). */
+  readonly allEvents = toSignal(
+    this.run(() =>
+      collectionData(
+        query(collection(this.firestore, 'events'), orderBy('start', 'desc')),
+        { idField: 'id' },
+      ),
+    ),
+    { initialValue: [] },
+  ) as import('@angular/core').Signal<GoEvent[]>;
+
   /**
    * Swipes des eingeloggten Users, live aus users/{uid}/swipes.
    * toObservable(user) feuert bei Login/Logout; switchMap wechselt

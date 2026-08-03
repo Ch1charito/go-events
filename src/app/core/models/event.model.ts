@@ -21,6 +21,18 @@ export const CATEGORY_LABELS: Record<EventCategory, string> = {
   'sonstiges': 'Sonstiges',
 };
 
+export const CATEGORIES: EventCategory[] = [
+  'club',
+  'bar',
+  'konzert',
+  'festival',
+  'open-air',
+  'kultur',
+  'markt',
+  'sport',
+  'sonstiges',
+];
+
 export interface GoEvent {
   id: string;
   title: string;

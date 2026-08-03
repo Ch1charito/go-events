@@ -1,1 +1,117 @@
-<p>admin works!</p>
+<section class="admin">
+    <header class="admin__header">
+        <h1>Admin</h1>
+        <button class="admin__new" (click)="resetForm()">Neues Event</button>
+    </header>
+
+    <div class="admin__grid">
+        <aside class="admin__list">
+            <p class="admin__hint">Liste kommt gleich…</p>
+        </aside>
+
+        <form class="admin__form" [formGroup]="form" (ngSubmit)="save()">
+            <h2>{{ heading() }}</h2>
+
+            <label>
+                Titel
+                <input type="text" formControlName="title" placeholder="z.B. Techno Nacht" />
+            </label>
+
+            <label>
+                Beschreibung
+                <textarea formControlName="description" rows="4"></textarea>
+            </label>
+
+            <label>
+                Bild-URL
+                <input type="url" formControlName="imageUrl" placeholder="https://…" />
+            </label>
+
+            <div class="admin__row">
+                <label>
+                    Kategorie
+                    <select formControlName="category">
+                        @for (cat of categories; track cat) {
+                        <option [value]="cat">{{ categoryLabels[cat] }}</option>
+                        }
+                    </select>
+                </label>
+
+                <label>
+                    Status
+                    <select formControlName="status">
+                        <option value="published">Veröffentlicht</option>
+                        <option value="draft">Entwurf</option>
+                    </select>
+                </label>
+            </div>
+
+            <label>
+                Tags (komma-separiert)
+                <input type="text" formControlName="tags" placeholder="Techno, Underground" />
+            </label>
+
+            <div class="admin__row">
+                <label>
+                    Start
+                    <input type="datetime-local" formControlName="start" />
+                </label>
+                <label>
+                    Ende (optional)
+                    <input type="datetime-local" formControlName="end" />
+                </label>
+            </div>
+
+            <label>
+                Veranstaltungsort
+                <input type="text" formControlName="locationName" placeholder="z.B. Kellerclub M" />
+            </label>
+
+            <div class="admin__row">
+                <label>
+                    Adresse
+                    <input type="text" formControlName="address" placeholder="Straße Nr, PLZ Ort" />
+                </label>
+                <label>
+                    Viertel
+                    <input type="text" formControlName="district" placeholder="z.B. Maxvorstadt" />
+                </label>
+            </div>
+
+            <div class="admin__row">
+                <label>
+                    Preis (€, 0 = frei)
+                    <input type="number" formControlName="price" min="0" />
+                </label>
+                <label>
+                    Mindestalter
+                    <input type="number" formControlName="minAge" min="0" />
+                </label>
+            </div>
+
+            <label>
+                Preishinweis (optional)
+                <input type="text" formControlName="priceNote" placeholder="Frauen frei bis 23 Uhr" />
+            </label>
+
+            <div class="admin__row">
+                <label>
+                    Veranstalter
+                    <input type="text" formControlName="organizerName" />
+                </label>
+                <label>
+                    Veranstalter-Link (optional)
+                    <input type="url" formControlName="organizerLink" placeholder="https://…" />
+                </label>
+            </div>
+
+            @if (message(); as msg) {
+            <p class="admin__message">{{ msg }}</p>
+            }
+
+            <button class="admin__submit" type="submit" [disabled]="form.invalid || saving()">
+                {{ editingId() ? 'Änderungen speichern' : 'Event anlegen' }}
+            </button>
+        </form>
+    </div>
+</section>

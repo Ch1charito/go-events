@@ -23,6 +23,7 @@
     padding: 10px 20px;
     border-radius: v.$radius-pill;
     transition: color 0.15s ease;
+    white-space: nowrap;
 
     &:hover {
       color: v.$text-secondary;
@@ -30,6 +31,17 @@
 
     &.active {
       color: v.$accent;
+    }
+  }
+
+  @media (max-width: 420px) {
+    justify-content: space-between;
+    padding: 0 8px;
+
+    a,
+    button {
+      padding: 10px 8px;
+      font-size: 13px;
     }
   }
 }

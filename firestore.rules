@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Hilfsfunktion: Ist der aufrufende User Admin?
+    function isAdmin() {
+      return request.auth != null
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
+
+    // Events: alle dürfen lesen, nur Admins schreiben
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // User-Dokumente: jeder liest/schreibt sein eigenes
+    // isAdmin darf sich beim Update NICHT ändern (nur über Console setzbar)
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null
+                    && request.auth.uid == userId
+                    && !('isAdmin' in request.resource.data);
+      allow update: if request.auth != null
+                    && request.auth.uid == userId
+                    && request.resource.data.get('isAdmin', false)
+                       == resource.data.get('isAdmin', false);
+      allow delete: if false;
+
+      // Swipes-Subcollection: nur der User selbst
+      match /swipes/{swipeId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+  }
+}

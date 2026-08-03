@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -26,6 +27,13 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/auth/auth.component').then((m) => m.AuthComponent),
     title: 'Go – Anmelden',
+  },
+  {
+    path: 'admin',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('./features/admin/admin.component').then((m) => m.AdminComponent),
+    title: 'Go – Admin',
   },
   {
     path: '**',

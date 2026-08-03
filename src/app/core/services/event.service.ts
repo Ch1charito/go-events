@@ -1,4 +1,4 @@
-import { Injectable, computed, inject, Injector, runInInjectionContext } from '@angular/core';
+import { Injectable, computed, inject, Injector, runInInjectionContext, signal } from '@angular/core';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { of, switchMap } from 'rxjs';
 import {
@@ -59,8 +59,16 @@ export class EventService {
     { initialValue: [] },
   );
 
+  /** Lokale Swipes für Gäste (nicht eingeloggt) – flüchtig, nur diese Session. */
+  private readonly guestSwipes = signal<Swipe[]>([]);
+
+  /** Zusammengeführte Swipes: entweder aus Firestore (User) oder lokal (Gast). */
+  private readonly effectiveSwipes = computed(() =>
+    this.authService.user() ? this.swipes() : this.guestSwipes(),
+  );
+
   readonly feed = computed(() => {
-    const swipedIds = new Set(this.swipes().map((s) => s.eventId));
+    const swipedIds = new Set(this.effectiveSwipes().map((s) => s.eventId));
     return this.events()
       .filter((e) => !swipedIds.has(e.id))
       .sort((a, b) => this.score(b) - this.score(a) || a.start.localeCompare(b.start));
@@ -68,7 +76,7 @@ export class EventService {
 
   readonly saved = computed(() => {
     const likedIds = new Set(
-      this.swipes()
+      this.effectiveSwipes()
         .filter((s) => s.direction === 'like')
         .map((s) => s.eventId),
     );
@@ -79,7 +87,7 @@ export class EventService {
 
   private readonly tagScores = computed(() => {
     const scores: Record<string, number> = {};
-    for (const s of this.swipes()) {
+    for (const s of this.effectiveSwipes()) {
       const event = this.events().find((e) => e.id === s.eventId);
       if (!event) continue;
       const delta = s.direction === 'like' ? 1 : -1;
@@ -94,10 +102,16 @@ export class EventService {
     return this.events().find((e) => e.id === id);
   }
 
-  /** Swipe speichern. Nur für eingeloggte User; Gäste-Swipes bleiben flüchtig. */
+  /** Swipe speichern. Eingeloggt → Firestore, Gast → lokales Signal (flüchtig). */
   async swipe(eventId: string, direction: SwipeDirection): Promise<void> {
     const user = this.authService.user();
-    if (!user) return;
+    if (!user) {
+      this.guestSwipes.update((list) => [
+        ...list,
+        { userId: 'guest', eventId, direction, timestamp: new Date().toISOString() },
+      ]);
+      return;
+    }
     await this.run(() =>
       addDoc(collection(this.firestore, `users/${user.uid}/swipes`), {
         eventId,
@@ -110,7 +124,10 @@ export class EventService {
   /** Like entfernen: passendes Swipe-Dokument suchen und löschen. */
   async removeLike(eventId: string): Promise<void> {
     const user = this.authService.user();
-    if (!user) return;
+    if (!user) {
+      this.guestSwipes.update((list) => list.filter((s) => s.eventId !== eventId));
+      return;
+    }
     const snapshot = await this.run(() =>
       getDocs(
         query(

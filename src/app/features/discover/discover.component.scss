@@ -1,0 +1,158 @@
+@use 'variables' as v;
+
+.discover {
+    padding: 0 12px 24px;
+
+    &__head {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        padding: 12px 0 8px;
+        background: rgba(13, 13, 15, 0.92);
+        backdrop-filter: blur(8px);
+        display: grid;
+        gap: 10px;
+    }
+
+    &__search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: v.$bg-elevated;
+        border: 1px solid v.$border;
+        border-radius: v.$radius-pill;
+        padding: 8px 14px;
+
+        &:focus-within {
+            border-color: v.$accent;
+        }
+
+        input {
+            flex: 1;
+            min-width: 0;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: v.$text-primary;
+            font-family: inherit;
+            font-size: 14px;
+
+            &::placeholder {
+                color: v.$text-muted;
+            }
+
+            &::-webkit-search-cancel-button {
+                cursor: pointer;
+            }
+        }
+    }
+
+    &__search-icon {
+        color: v.$text-muted;
+        font-size: 16px;
+    }
+
+    &__chips {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    &__chip {
+        background: v.$bg-elevated;
+        color: v.$text-secondary;
+        border: 1px solid v.$border;
+        border-radius: v.$radius-pill;
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+        transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+
+        &--active {
+            background: v.$accent-strong;
+            color: v.$text-primary;
+            border-color: v.$accent-strong;
+        }
+    }
+
+    &__chip-divider {
+        width: 1px;
+        background: v.$border;
+        margin: 4px 4px;
+        flex-shrink: 0;
+    }
+
+    &__empty {
+        color: v.$text-secondary;
+        font-size: 14px;
+        text-align: center;
+        padding: 40px 16px;
+    }
+
+    &__grid {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        padding: 12px 0 0;
+
+        @media (min-width: 600px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        @media (min-width: 900px) {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    &__card {
+        position: relative;
+        display: block;
+        aspect-ratio: 3 / 4;
+        border-radius: 12px;
+        overflow: hidden;
+        background: v.$bg-card;
+        border: 1px solid v.$border;
+
+        &:hover {
+            border-color: v.$accent-strong;
+        }
+    }
+
+    &__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    &__overlay {
+        position: absolute;
+        inset-inline: 0;
+        bottom: 0;
+        padding: 10px;
+        background: linear-gradient(to top, rgba(13, 13, 15, 0.92), transparent);
+        display: grid;
+        gap: 2px;
+    }
+
+    &__title {
+        color: v.$text-primary;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__meta {
+        color: v.$text-secondary;
+        font-size: 11px;
+    }
+}

@@ -23,8 +23,8 @@ export class EventService {
   private readonly firestore = inject(Firestore);
   private readonly authService = inject(AuthService);
 
-  /** Events aus Firestore: nur published, nur ab heute, nach Start sortiert */
-  private readonly events = toSignal(
+  /** Alle öffentlich sichtbaren Events (published, ab heute). Basis für Feed und Discover. */
+  readonly allVisible = toSignal(
     this.run(() =>
       collectionData(
         query(
@@ -80,7 +80,7 @@ export class EventService {
 
   readonly feed = computed(() => {
     const swipedIds = new Set(this.effectiveSwipes().map((s) => s.eventId));
-    return this.events()
+    return this.allVisible()
       .filter((e) => !swipedIds.has(e.id))
       .sort((a, b) => this.score(b) - this.score(a) || a.start.localeCompare(b.start));
   });
@@ -91,7 +91,7 @@ export class EventService {
         .filter((s) => s.direction === 'like')
         .map((s) => s.eventId),
     );
-    return this.events()
+    return this.allVisible()
       .filter((e) => likedIds.has(e.id))
       .sort((a, b) => a.start.localeCompare(b.start));
   });
@@ -99,7 +99,7 @@ export class EventService {
   private readonly tagScores = computed(() => {
     const scores: Record<string, number> = {};
     for (const s of this.effectiveSwipes()) {
-      const event = this.events().find((e) => e.id === s.eventId);
+      const event = this.allVisible().find((e) => e.id === s.eventId);
       if (!event) continue;
       const delta = s.direction === 'like' ? 1 : -1;
       for (const tag of [...event.tags, event.category]) {
@@ -110,7 +110,7 @@ export class EventService {
   });
 
   getById(id: string): GoEvent | undefined {
-    return this.events().find((e) => e.id === id);
+    return this.allVisible().find((e) => e.id === id);
   }
 
   /** Swipe speichern. Eingeloggt → Firestore, Gast → lokales Signal (flüchtig). */

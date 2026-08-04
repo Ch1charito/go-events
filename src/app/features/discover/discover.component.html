@@ -1,0 +1,47 @@
+<section class="discover">
+    <div class="discover__head">
+        <label class="discover__search">
+            <span class="discover__search-icon" aria-hidden="true">⌕</span>
+            <input type="search" placeholder="Events, Orte, Tags…" [value]="search()" (input)="onSearch($event)"
+                aria-label="Suche" />
+        </label>
+
+        <div class="discover__chips" role="group" aria-label="Filter">
+            <button class="discover__chip" [class.discover__chip--active]="time() === 'today'"
+                (click)="setTime('today')">Heute</button>
+            <button class="discover__chip" [class.discover__chip--active]="time() === 'weekend'"
+                (click)="setTime('weekend')">Wochenende</button>
+            <button class="discover__chip" [class.discover__chip--active]="freeOnly()"
+                (click)="toggleFree()">Kostenlos</button>
+
+            <span class="discover__chip-divider" aria-hidden="true"></span>
+
+            @for (cat of categories; track cat) {
+            <button class="discover__chip" [class.discover__chip--active]="activeCategories().has(cat)"
+                (click)="toggleCategory(cat)">{{ categoryLabels[cat] }}</button>
+            }
+        </div>
+    </div>
+
+    @if (filtered().length === 0) {
+    <p class="discover__empty">Keine Events gefunden. Filter anpassen oder Suche leeren.</p>
+    } @else {
+    <ul class="discover__grid">
+        @for (event of filtered(); track event.id) {
+        <li>
+            <a class="discover__card" [routerLink]="['/event', event.id]">
+                <img class="discover__image" [src]="event.imageUrl" [alt]="event.title" />
+                <div class="discover__overlay">
+                    <span class="discover__title">{{ event.title }}</span>
+                    <span class="discover__meta">
+                        {{ event.start | date: 'EE HH:mm' }}
+                        @if (event.price === 0) { · frei }
+                        @else if (event.price !== undefined) { · {{ event.price }}€ }
+                    </span>
+                </div>
+            </a>
+        </li>
+        }
+    </ul>
+    }
+</section>

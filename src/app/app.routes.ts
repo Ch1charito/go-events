@@ -37,6 +37,12 @@ export const routes: Routes = [
     title: 'Go – Profil',
   },
   {
+    path: 'discover',
+    loadComponent: () =>
+      import('./features/discover/discover.component').then((m) => m.DiscoverComponent),
+    title: 'Go – Entdecken',
+  },
+  {
     path: 'admin',
     canActivate: [adminGuard],
     loadComponent: () =>

@@ -1,29 +1,27 @@
 import { ChangeDetectionStrategy, Component, computed, inject, Injector, runInInjectionContext } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { toSignal, toObservable } from '@angular/core/rxjs-interop';
+import { Router, RouterLink } from '@angular/router';
 import { doc, docData, Firestore } from '@angular/fire/firestore';
 import { of, switchMap } from 'rxjs';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { AuthService } from './core/services/auth.service';
-import { GoUser } from './core/models/user.model';
+import { AuthService } from '../../core/services/auth.service';
+import { GoUser } from '../../core/models/user.model';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-profile',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  templateUrl: './profile.component.html',
+  styleUrl: './profile.component.scss',
 })
-export class AppComponent {
+export class ProfileComponent {
   private readonly injector = inject(Injector);
   private readonly authService = inject(AuthService);
   private readonly firestore = inject(Firestore);
   private readonly router = inject(Router);
 
-  readonly isLoggedIn = this.authService.isLoggedIn;
+  readonly user = this.authService.user;
 
-  /** User-Dokument aus Firestore, reaktiv auf Login-Wechsel. */
   private readonly userDoc = toSignal(
     toObservable(this.authService.user).pipe(
       switchMap((user) => {
@@ -36,6 +34,8 @@ export class AppComponent {
     { initialValue: undefined },
   );
 
+  readonly displayName = computed(() => this.userDoc()?.displayName ?? this.user()?.displayName ?? 'Nutzer');
+  readonly email = computed(() => this.userDoc()?.email ?? this.user()?.email ?? '');
   readonly isAdmin = computed(() => this.userDoc()?.isAdmin === true);
 
   async logout(): Promise<void> {

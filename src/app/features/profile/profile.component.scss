@@ -1,0 +1,99 @@
+@use 'variables' as v;
+
+.profile {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    display: grid;
+    gap: 20px;
+
+    &__card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: v.$bg-card;
+        border: 1px solid v.$border;
+        border-radius: 14px;
+        padding: 20px;
+
+        @media (max-width: 380px) {
+            padding: 16px;
+            gap: 12px;
+        }
+    }
+
+    &__avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: v.$accent-bg;
+        color: v.$accent-text;
+        display: grid;
+        place-items: center;
+        font-size: 22px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    &__info {
+        min-width: 0;
+        flex: 1;
+    }
+
+    &__name {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__email {
+        color: v.$text-secondary;
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__actions {
+        display: grid;
+        gap: 10px;
+    }
+
+    &__link {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: v.$bg-card;
+        border: 1px solid v.$border;
+        border-radius: 12px;
+        padding: 14px 16px;
+        color: v.$text-primary;
+        font-weight: 600;
+        font-size: 14px;
+        transition: border-color 0.15s ease;
+
+        &:hover {
+            border-color: v.$accent;
+            color: v.$accent;
+        }
+    }
+
+    &__logout {
+        background: transparent;
+        color: v.$dislike;
+        border: 1px solid v.$border;
+        border-radius: 12px;
+        padding: 14px 16px;
+        font-weight: 600;
+        font-size: 14px;
+        transition: background 0.15s ease, border-color 0.15s ease;
+
+        &:hover {
+            background: rgba(226, 75, 74, 0.15);
+            border-color: v.$dislike;
+        }
+    }
+}

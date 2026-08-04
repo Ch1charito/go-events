@@ -1,0 +1,20 @@
+<section class="profile">
+    <div class="profile__card">
+        <div class="profile__avatar">{{ displayName().charAt(0).toUpperCase() }}</div>
+        <div class="profile__info">
+            <h1 class="profile__name">{{ displayName() }}</h1>
+            <p class="profile__email">{{ email() }}</p>
+        </div>
+    </div>
+
+    <div class="profile__actions">
+        @if (isAdmin()) {
+        <a class="profile__link" routerLink="/admin">
+            Admin-Panel
+            <span aria-hidden="true">→</span>
+        </a>
+        }
+
+        <button class="profile__logout" (click)="logout()">Ausloggen</button>
+    </div>
+</section>

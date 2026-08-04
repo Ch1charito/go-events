@@ -10,7 +10,6 @@
 
   @if (isLoggedIn()) {
     <a routerLink="/profile" routerLinkActive="active">Profil</a>
-    <button class="app__logout" (click)="logout()">Logout</button>
   } @else {
     <a routerLink="/auth" routerLinkActive="active">Login</a>
   }

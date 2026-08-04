@@ -96,7 +96,7 @@ export class EventService {
       .sort((a, b) => a.start.localeCompare(b.start));
   });
 
-  private readonly tagScores = computed(() => {
+  readonly tagScores = computed(() => {
     const scores: Record<string, number> = {};
     for (const s of this.effectiveSwipes()) {
       const event = this.allVisible().find((e) => e.id === s.eventId);

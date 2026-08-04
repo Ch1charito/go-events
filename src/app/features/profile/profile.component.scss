@@ -96,4 +96,30 @@
             border-color: v.$dislike;
         }
     }
+
+    &__interests {
+        background: v.$bg-card;
+        border: 1px solid v.$border;
+        border-radius: 14px;
+        padding: 20px;
+        display: grid;
+        gap: 10px;
+    }
+
+    &__interests-heading {
+        font-size: 14px;
+        font-weight: 600;
+        color: v.$text-secondary;
+    }
+
+    &__interests-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    &__interests-hint {
+        color: v.$text-muted;
+        font-size: 12px;
+    }
 }

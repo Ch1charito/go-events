@@ -29,7 +29,7 @@
                         </span>
                     </div>
                     <button class="admin__item-delete" (click)="delete(event); $event.stopPropagation()"
-                        aria-label="Event löschen" title="Löschen">🗑</button>
+                        aria-label="Löschen">🗑</button>
                 </li>
                 }
             </ul>
@@ -141,4 +141,31 @@
             </button>
         </form>
     </div>
+
+    <section class="admin__import">
+        <h2>Bulk-Import (JSON)</h2>
+        <p class="admin__import-hint">
+            JSON-Array mit Events einfügen. Alle Events werden nur importiert, wenn keiner Validierungsfehler hat.
+        </p>
+        <textarea
+            class="admin__import-input"
+            rows="10"
+            placeholder='[{"title": "...", "description": "...", ...}]'
+            [value]="importJson()"
+            (input)="onImportInput($event)"
+        ></textarea>
+        <div class="admin__import-buttons">
+            <button class="admin__import-btn" (click)="runImport()" [disabled]="!importJson().trim() || importing()">
+                {{ importing() ? 'Importiere…' : 'Events importieren' }}
+            </button>
+            <button
+                class="admin__import-clear"
+                (click)="clearImport()"
+                [disabled]="importing() || (!importJson().trim() && !importResult())"
+            >Leeren</button>
+        </div>
+        @if (importResult(); as result) {
+            <pre class="admin__import-result">{{ result }}</pre>
+        }
+    </section>
 </section>

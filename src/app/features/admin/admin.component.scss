@@ -63,6 +63,75 @@
         font-size: 14px;
     }
 
+    &__form {
+        display: grid;
+        gap: 14px;
+
+        h2 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        label {
+            display: grid;
+            gap: 6px;
+            font-size: 13px;
+            color: v.$text-secondary;
+        }
+
+        input,
+        textarea,
+        select {
+            background: v.$bg-elevated;
+            border: 1px solid v.$border;
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: v.$text-primary;
+            font-family: inherit;
+            font-size: 14px;
+
+            &:focus {
+                outline: none;
+                border-color: v.$accent;
+            }
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+    }
+
+    &__row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+
+        @media (max-width: 600px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__message {
+        color: v.$accent;
+        font-size: 13px;
+    }
+
+    &__submit {
+        background: v.$accent-strong;
+        color: v.$text-primary;
+        padding: 12px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 15px;
+        margin-top: 4px;
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+    }
+
     &__list-head {
         display: flex;
         justify-content: space-between;
@@ -156,68 +225,89 @@
         }
     }
 
-    &__form {
+    &__import {
+        background: v.$bg-card;
+        border: 1px solid v.$border;
+        border-radius: 14px;
+        padding: 20px;
+        margin-top: 20px;
         display: grid;
-        gap: 14px;
+        gap: 12px;
 
         h2 {
             font-size: 18px;
             font-weight: 700;
         }
-
-        label {
-            display: grid;
-            gap: 6px;
-            font-size: 13px;
-            color: v.$text-secondary;
-        }
-
-        input,
-        textarea,
-        select {
-            background: v.$bg-elevated;
-            border: 1px solid v.$border;
-            border-radius: 10px;
-            padding: 10px 12px;
-            color: v.$text-primary;
-            font-family: inherit;
-            font-size: 14px;
-
-            &:focus {
-                outline: none;
-                border-color: v.$accent;
-            }
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
     }
 
-    &__row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-
-        @media (max-width: 600px) {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    &__message {
-        color: v.$accent;
+    &__import-hint {
+        color: v.$text-muted;
         font-size: 13px;
     }
 
-    &__submit {
+    &__import-input {
+        background: v.$bg-elevated;
+        border: 1px solid v.$border;
+        border-radius: 10px;
+        padding: 10px 12px;
+        color: v.$text-primary;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        resize: vertical;
+        min-height: 200px;
+
+        &:focus {
+            outline: none;
+            border-color: v.$accent;
+        }
+    }
+
+    &__import-btn {
+        flex: 1;
         background: v.$accent-strong;
         color: v.$text-primary;
         padding: 12px;
         border-radius: 10px;
         font-weight: 600;
         font-size: 15px;
-        margin-top: 4px;
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+    }
+
+    &__import-result {
+        background: v.$bg-elevated;
+        border: 1px solid v.$border;
+        border-radius: 10px;
+        padding: 12px;
+        color: v.$text-secondary;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        white-space: pre-wrap;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    &__import-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    &__import-clear {
+        background: transparent;
+        color: v.$text-secondary;
+        border: 1px solid v.$border;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 15px;
+
+        &:hover {
+            border-color: v.$dislike;
+            color: v.$dislike;
+        }
 
         &:disabled {
             opacity: 0.5;

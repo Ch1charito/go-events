@@ -23,6 +23,9 @@ export class EventService {
   private readonly firestore = inject(Firestore);
   private readonly authService = inject(AuthService);
 
+  /** Beim Service-Start einmal gesetzt, bleibt für die Session stabil. */
+  private readonly sessionSeed = Math.random();
+
   /** Alle öffentlich sichtbaren Events (published, ab heute). Basis für Feed und Discover. */
   readonly allVisible = toSignal(
     this.run(() =>
@@ -80,9 +83,8 @@ export class EventService {
 
   readonly feed = computed(() => {
     const swipedIds = new Set(this.effectiveSwipes().map((s) => s.eventId));
-    return this.allVisible()
-      .filter((e) => !swipedIds.has(e.id))
-      .sort((a, b) => this.score(b) - this.score(a) || a.start.localeCompare(b.start));
+    const available = this.allVisible().filter((e) => !swipedIds.has(e.id));
+    return this.shuffle(available);
   });
 
   readonly saved = computed(() => {
@@ -159,5 +161,28 @@ export class EventService {
 
   private run<T>(fn: () => T): T {
     return runInInjectionContext(this.injector, fn);
+  }
+
+  /** Deterministischer Pseudo-Random-Generator (Mulberry32). */
+  private mulberry32(seed: number): () => number {
+    let a = Math.floor(seed * 2 ** 32);
+    return () => {
+      a = (a + 0x6d2b79f5) | 0;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 2 ** 32;
+    };
+  }
+
+  /** Fisher-Yates-Shuffle mit seeded Random – gleiche Eingabe + Seed = gleiche Reihenfolge. */
+  private shuffle<T>(items: T[]): T[] {
+    const random = this.mulberry32(this.sessionSeed);
+    const arr = [...items];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
   }
 }

@@ -7,6 +7,11 @@
     display: grid;
     gap: 20px;
 
+    @media (max-width: 380px) {
+        padding: 20px 12px;
+        gap: 16px;
+    }
+
     &__card {
         display: flex;
         align-items: center;

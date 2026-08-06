@@ -3,7 +3,17 @@
     <div class="detail__hero">
       <img [src]="e.imageUrl" [alt]="e.title" />
       <button class="detail__back" (click)="back()" aria-label="Zurück">←</button>
-      <button class="detail__share" (click)="share()" aria-label="Event teilen">Teilen</button>
+      <div class="detail__hero-actions">
+        <button class="detail__share" (click)="share()" aria-label="Event teilen">Teilen</button>
+        <button
+          class="detail__icon-btn"
+          [class.detail__icon-btn--liked]="currentSwipe() === 'like'"
+          (click)="toggleLike()"
+          [attr.aria-label]="currentSwipe() === 'like' ? 'Like entfernen' : 'Event merken'"
+        >
+          @if (currentSwipe() === 'like') { ♥ } @else { ♡ }
+        </button>
+      </div>
     </div>
 
     <div class="detail__body">

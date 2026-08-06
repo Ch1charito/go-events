@@ -24,6 +24,13 @@ export class EventDetailComponent {
     return e ? CATEGORY_LABELS[e.category] : '';
   });
 
+  /** Aktueller Swipe-Status für dieses Event: 'like', 'dislike' oder null. */
+  readonly currentSwipe = computed<'like' | 'dislike' | null>(() => {
+    const id = this.id();
+    const swipe = this.eventService.effectiveSwipes().find((s) => s.eventId === id);
+    return swipe?.direction ?? null;
+  });
+
   back(): void {
     this.location.back();
   }
@@ -48,4 +55,13 @@ export class EventDetailComponent {
       alert('Link kopiert');
     }
   }
+
+  async toggleLike(): Promise<void> {
+    if (this.currentSwipe() === 'like') {
+      await this.eventService.removeLike(this.id());
+    } else {
+      await this.eventService.swipe(this.id(), 'like');
+    }
+  }
+
 }

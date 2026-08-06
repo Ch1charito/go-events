@@ -74,7 +74,7 @@ export class EventService {
   private readonly guestSwipes = signal<Swipe[]>([]);
 
   /** Zusammengeführte Swipes: entweder aus Firestore (User) oder lokal (Gast). */
-  private readonly effectiveSwipes = computed(() =>
+  readonly effectiveSwipes = computed(() =>
     this.authService.user() ? this.swipes() : this.guestSwipes(),
   );
 

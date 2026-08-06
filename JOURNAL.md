@@ -60,3 +60,23 @@
 - Löschen mit deutlichem UX-Signal (roter Papierkorb + confirm mit Titel)
 - Responsive Fixes: Navbar bis 280px, Admin-Grid ohne Overflow-Zone,
   sticky Header im Admin
+
+  ## Session 8
+- feature/profile: Grundgerüst mit Logout, Admin-Link (nur für Admins sichtbar), User-Card mit Avatar
+- feature/discover: Entdecken-Tab mit Suchleiste (Titel/Location/Tags/Viertel), Filter-Chips
+  (Heute/Wochenende/Kostenlos + Kategorien), responsivem Grid (2/3/4 Spalten)
+- authGuard hinzugefügt (schützt Profil, leitet Gäste zur Auth-Seite)
+- Navbar entschlackt: Logout wanderte ins Profil, Discover-Link ergänzt
+- Interessen-Tags im Profil ergänzt (Top-5 aus tagScores, aus Swipes gelernt)
+- Detailseite umgebaut: Instagram-Style Herz-Button (Toggle Like/Neutral),
+  Dislike nur noch per Feed-Swipe möglich
+- Responsive-Fixes an Profil und Detail
+
+## Session 9
+- fix/guest-swipes und feature/feed-shuffle: Session-stabile Feed-Randomisierung
+  (Fisher-Yates + Mulberry32-Seed), pro F5 neue Reihenfolge, während Session stabil
+- feature/bulk-import: JSON-Import im Admin-Panel mit Alles-oder-nichts-Validierung
+  (Pflichtfelder + Datum-Format), Textarea + Import- und Leeren-Button, Statusmeldung
+- Test mit gemischten JSONs (gültig+kaputt) durchgespielt, Validierung greift zuverlässig
+- Phase-3-Liste eröffnet (Aufräum-Feature für vergangene Events, Datumsbereich-Filter)
+- Cleanup-Task von Phase 1 auf Phase-2-Abschluss verschoben

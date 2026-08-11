@@ -80,3 +80,13 @@
 - Test mit gemischten JSONs (gültig+kaputt) durchgespielt, Validierung greift zuverlässig
 - Phase-3-Liste eröffnet (Aufräum-Feature für vergangene Events, Datumsbereich-Filter)
 - Cleanup-Task von Phase 1 auf Phase-2-Abschluss verschoben
+
+## Session 10
+- 100 realistische Munich-Events per Bulk-Import angelegt (8 Wochen, alle Kategorien
+  verteilt, Mix echter Locations wie Blitz/Backstage/Pinakothek/Allianz Arena mit
+  fiktiven Veranstaltern, realistische Uhrzeiten pro Kategorie)
+- Alte 6 Test-Events mit 2027-Datum aus Firestore entfernt
+- Bilder pro Kategorie festgelegt (Unsplash-URLs, gekürzt)
+- Phase-3-Idee ergänzt: Veranstalter-Panel mit Drag-and-Drop-Bildupload
+  (Firebase Storage + clientseitige Komprimierung, statt Cloudinary-Umweg)
+- Feedback-Form für Profil geplant (neue Collection, allow create + read/update/delete false)

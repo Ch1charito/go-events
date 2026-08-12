@@ -6,6 +6,7 @@
             <p class="profile__email">{{ email() }}</p>
         </div>
     </div>
+
     @if (topInterests().length > 0) {
     <div class="profile__interests">
         <h2 class="profile__interests-heading">Deine Interessen</h2>
@@ -17,6 +18,28 @@
         <p class="profile__interests-hint">Aus deinen Swipes gelernt. Beeinflusst die Reihenfolge im Feed.</p>
     </div>
     }
+
+    <div class="profile__feedback">
+        <h2 class="profile__feedback-heading">Feedback geben</h2>
+        <textarea
+            class="profile__feedback-input"
+            rows="4"
+            placeholder="Was gefällt dir? Was können wir verbessern?"
+            [value]="feedbackText()"
+            (input)="onFeedbackInput($event)"
+        ></textarea>
+        <button
+            class="profile__feedback-btn"
+            (click)="sendFeedback()"
+            [disabled]="!feedbackText().trim() || feedbackSending()"
+        >
+            {{ feedbackSending() ? 'Wird gesendet…' : 'Absenden' }}
+        </button>
+        @if (feedbackResult(); as result) {
+            <p class="profile__feedback-result">{{ result }}</p>
+        }
+    </div>
+
     <div class="profile__actions">
         @if (isAdmin()) {
         <a class="profile__link" routerLink="/admin">

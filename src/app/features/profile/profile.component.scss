@@ -62,6 +62,83 @@
         text-overflow: ellipsis;
     }
 
+    &__interests {
+        background: v.$bg-card;
+        border: 1px solid v.$border;
+        border-radius: 14px;
+        padding: 20px;
+        display: grid;
+        gap: 10px;
+    }
+
+    &__interests-heading {
+        font-size: 14px;
+        font-weight: 600;
+        color: v.$text-secondary;
+    }
+
+    &__interests-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    &__interests-hint {
+        color: v.$text-muted;
+        font-size: 12px;
+    }
+
+    &__feedback {
+        background: v.$bg-card;
+        border: 1px solid v.$border;
+        border-radius: 14px;
+        padding: 20px;
+        display: grid;
+        gap: 10px;
+    }
+
+    &__feedback-heading {
+        font-size: 14px;
+        font-weight: 600;
+        color: v.$text-secondary;
+    }
+
+    &__feedback-input {
+        background: v.$bg-elevated;
+        border: 1px solid v.$border;
+        border-radius: 10px;
+        padding: 10px 12px;
+        color: v.$text-primary;
+        font-family: inherit;
+        font-size: 14px;
+        resize: vertical;
+        min-height: 80px;
+
+        &:focus {
+            outline: none;
+            border-color: v.$accent;
+        }
+    }
+
+    &__feedback-btn {
+        background: v.$accent-strong;
+        color: v.$text-primary;
+        padding: 12px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+    }
+
+    &__feedback-result {
+        color: v.$accent;
+        font-size: 13px;
+    }
+
     &__actions {
         display: grid;
         gap: 10px;
@@ -100,31 +177,5 @@
             background: rgba(226, 75, 74, 0.15);
             border-color: v.$dislike;
         }
-    }
-
-    &__interests {
-        background: v.$bg-card;
-        border: 1px solid v.$border;
-        border-radius: 14px;
-        padding: 20px;
-        display: grid;
-        gap: 10px;
-    }
-
-    &__interests-heading {
-        font-size: 14px;
-        font-weight: 600;
-        color: v.$text-secondary;
-    }
-
-    &__interests-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-    }
-
-    &__interests-hint {
-        color: v.$text-muted;
-        font-size: 12px;
     }
 }

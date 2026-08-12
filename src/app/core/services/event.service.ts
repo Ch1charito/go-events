@@ -81,10 +81,13 @@ export class EventService {
     this.authService.user() ? this.swipes() : this.guestSwipes(),
   );
 
+  /** Einmal gemischt pro Session – ändert sich nur wenn Events aus Firestore neu laden. */
+  private readonly shuffledEvents = computed(() => this.shuffle(this.allVisible()));
+
+  /** Feed: gefiltert nach Swipes, Reihenfolge bleibt stabil. */
   readonly feed = computed(() => {
     const swipedIds = new Set(this.effectiveSwipes().map((s) => s.eventId));
-    const available = this.allVisible().filter((e) => !swipedIds.has(e.id));
-    return this.shuffle(available);
+    return this.shuffledEvents().filter((e) => !swipedIds.has(e.id));
   });
 
   readonly saved = computed(() => {

@@ -90,3 +90,16 @@
 - Phase-3-Idee ergänzt: Veranstalter-Panel mit Drag-and-Drop-Bildupload
   (Firebase Storage + clientseitige Komprimierung, statt Cloudinary-Umweg)
 - Feedback-Form für Profil geplant (neue Collection, allow create + read/update/delete false)
+
+## Session 11
+- App umbenannt von "Go" zu "Outside" (Manifest, Titel, Routes, Auth-Logo)
+- Favicon + Web Manifest eingebunden (favicon.io, alle Größen, Homescreen-tauglich)
+- 9 Unsplash-Bilder pro Kategorie ausgewählt, 100 realistische München-Events
+  per Bulk-Import angelegt (8 Wochen, echte Locations, fiktive Veranstalter)
+- Feedback-Form im Profil: Textarea + Absenden, pusht in `feedback`-Collection,
+  Security Rule ergänzt (create für eingeloggte User, read/update/delete false)
+- FeedbackService mit Injection-Context-Wrap
+- Prod-Build, .htaccess für Angular-Routing, Deploy auf Subdomain
+  outside.r-bautista-buschmann.de via FileZilla/All-Inkl
+- Firebase Authorized Domain eingetragen
+- Phase 1 MVP ist live — Testphase mit Freunden/Familie startet
